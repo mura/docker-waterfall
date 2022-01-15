@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+if [ -z "${BUILD}" -o "${BUILD}" = "LATEST" ]; then
+  BUILD=$(curl -s ${PAPER_API}/versions/${VERSION} | jq -r '.builds[-1]')
+fi
+APP_JSON=$(curl -s ${PAPER_API}/versions/${VERSION}/builds/${BUILD} | jq -c '.downloads.application')
+APP_NAME=$(echo ${APP_JSON} | jq -r '.name')
+if [ ! -f "${APP_NAME}" ]; then
+  curl -sRO "${PAPER_API}/versions/${VERSION}/builds/${BUILD}/downloads/${APP_NAME}"
+fi
+echo -e "$(echo ${APP_JSON} | jq -r '.sha256')\t${APP_NAME}" > "${APP_NAME}.sha256"
+sha256sum -c "${APP_NAME}.sha256"
+
+JAVA_ARGS=($JVM_OPTS)
+exec java "${JAVA_ARGS[@]}" -jar "${APP_NAME}"
