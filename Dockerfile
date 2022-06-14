@@ -28,7 +28,7 @@ RUN mkdir /app
 COPY start /app
 
 ENV PATH /opt/jre/bin:$PATH
-ENV VERSION 1.18
+ENV VERSION 1.19
 ENV BUILD LATEST
 ENV PAPER_API https://papermc.io/api/v2/projects/waterfall
 ENV JVM_OPTS -Xms512M -Xmx512M -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch
